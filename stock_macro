@@ -1,0 +1,94 @@
+Sub stock()
+
+Dim total As Variant
+Dim max As Long
+Dim count As Integer
+count = 2
+total = 0
+
+Dim st_open As Double
+Dim st_close As Double
+
+
+max = Range("A1").End(xlDown).Row
+'MsgBox (max)
+
+Range("i1").Value = "Ticker"
+Range("j1").Value = "Yearly Change"
+Range("k1").Value = "Percent Change"
+Range("l1").Value = "Total Stock Volume"
+
+For i = 1 To max
+
+If Cells(i + 1, 1).Value <> Cells(i, 1).Value Then
+Cells(count, 9).Value = Cells(i + 1, 1).Value
+total = Cells(i + 1, 7).Value
+count = count + 1
+st_open = Cells(i + 1, 3).Value
+Else
+total = total + Cells(i + 1, 7).Value
+Cells(count - 1, 12).Value = total
+st_close = Cells(i + 1, 6).Value
+Cells(count - 1, 10).Value = st_close - st_open
+if st_open <> 0 Then
+Cells(count - 1, 11).Value = Cells(count - 1, 10).Value / st_open
+Else Cells(count-1,11).Value = 0
+End If
+If Cells(count - 1, 10).Value <= 0 Then
+Cells(count - 1, 10).Interior.ColorIndex = 3
+Else: Cells(count - 1, 10).Interior.ColorIndex = 4
+End If
+Cells(count - 1, 11).NumberFormat = "0.00%"
+End If
+
+Next i
+
+Cells(1, 16).Value = "Ticker"
+Cells(1, 17).Value = "Value"
+Cells(2, 15).Value = "Greatest %increase'"
+Cells(3, 15).Value = "Greatest %decrease"
+Cells(4, 15).Value = "Greatest total value"
+
+Dim inc As String
+Dim dec As String
+Dim tot As String
+Dim incn As Double
+Dim decn As Double
+Dim totn As Variant
+
+inc = Cells(2, 9).Value
+dec = Cells(2, 9).Value
+tot = Cells(2, 9).Value
+incn = Cells(2, 11).Value
+decn = Cells(2, 11).Value
+totn = Cells(2, 12).Value
+
+Dim tickct As Integer
+tickct = Cells(1, 9).End(xlDown).Row
+
+For i = 2 To tickct
+If Cells(i, 11) > incn Then
+inc = Cells(i, 9).Value
+incn = Cells(i, 11).Value
+End If
+If Cells(i, 11) < decn Then
+dec = Cells(i, 9).Value
+decn = Cells(i, 11).Value
+End If
+If Cells(i, 12) > totn Then
+tot = Cells(i, 9).Value
+totn = Cells(i, 12).Value
+End If
+Next i
+
+Cells(2, 16).Value = inc
+Cells(3, 16).Value = dec
+Cells(4, 16).Value = tot
+Cells(2, 17).Value = incn
+Cells(3, 17).Value = decn
+Cells(4, 17).Value = totn
+
+Cells(2, 17).NumberFormat = "0.00%"
+Cells(3, 17).NumberFormat = "0.00%"
+
+End Sub
